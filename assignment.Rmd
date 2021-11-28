@@ -1,0 +1,45 @@
+# Part 1
+
+Read the outcome data into R via the read.csv function and look at the first
+few rows.
+
+```{r}
+outcome_csv = file.path("Data", "outcome-of-care-measures.csv")
+outcome <- read.csv(outcome_csv, colClasses = "character")
+head(outcome)
+```
+
+To make a simple histogram of the 30-day death rates from heart attack
+(column 11 in the outcome dataset), run:
+
+> We expect a warning about NAs being introduced; that is okay
+
+```{r fig.cap "Histogram of 30-day death rates from heart attack"}
+outcome[, 11] <- as.numeric(outcome[, 11])
+hist(outcome[, 11])
+```
+
+# Part 2
+
+```{r}
+best <- function(state, outcome) {
+    ## Read outcome data
+    outcome_csv <- file.path("Data", "outcome-of-care-measures.csv")
+    df <- read.csv(outcome_csv, colClasses = "character")
+
+    ## Check that state and outcome are valid
+    if (!(state %in% df$State)) {
+        stop(sprintf("'%s' not a valid state", state))
+    }
+    lookup <- c(11, 17, 23)  # columns 
+    names(lookup) <- c("heart attack", "heart failure", "pneumonia")
+    if (!(outcome %in% names(lookup))) {
+        stop(sprintf("'%s' not a valid outcome", outcome))
+    }
+
+    ## Return hospital name in that state with lowest 30-day death
+    ## rate
+    state_df <- df[df$State == state, ]
+    state_df[which.min(state_df[[lookup[[outcome]]]]), "Hospital.Name"]
+}
+```
