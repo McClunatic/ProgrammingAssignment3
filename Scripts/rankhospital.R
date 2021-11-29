@@ -3,7 +3,8 @@
 ##     state: The state to rank hospitals for
 ##     outcome: The outcome, "heart attack", "heart failure", or "pneumonia"
 ##     num: Rank number or one of "best", "worst"
-
+## Returns:
+##     Name of ranked hospital
 rankhospital <- function(state, outcome, num = "best") {
     ## Read outcome data
     outcome_csv <- file.path("Data", "outcome-of-care-measures.csv")
@@ -15,7 +16,7 @@ rankhospital <- function(state, outcome, num = "best") {
     }
     index <- names(df)[c(2, 11, 17, 23)]  # columns
     names(index) <- c("hospital", "heart attack", "heart failure", "pneumonia")
-    if (!(outcome %in% names(index))) {
+    if (!(outcome %in% names(index)[2:4])) {
         stop(sprintf("'%s' not a valid outcome", outcome))
     }
 

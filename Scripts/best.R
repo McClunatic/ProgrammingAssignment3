@@ -2,6 +2,8 @@
 ## Args:
 ##    state: The state to search (by 2 letter acronym)
 ##    outcome: One of "heart attack", "heart failure", "pneumonia"
+## Returns:
+##    The name of the best hospital
 best <- function(state, outcome) {
     ## Read outcome data
     outcome_csv <- file.path("Data", "outcome-of-care-measures.csv")
@@ -13,7 +15,7 @@ best <- function(state, outcome) {
     }
     index <- names(df)[c(2, 11, 17, 23)]  # columns
     names(index) <- c("hospital", "heart attack", "heart failure", "pneumonia")
-    if (!(outcome %in% names(index))) {
+    if (!(outcome %in% names(index)[2:4])) {
         stop(sprintf("'%s' not a valid outcome", outcome))
     }
 
