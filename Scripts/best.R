@@ -11,14 +11,19 @@ best <- function(state, outcome) {
     if (!(state %in% df$State)) {
         stop(sprintf("'%s' not a valid state", state))
     }
-    lookup <- c(11, 17, 23)  # columns 
-    names(lookup) <- c("heart attack", "heart failure", "pneumonia")
-    if (!(outcome %in% names(lookup))) {
+    index <- names(df)[c(2, 11, 17, 23)]  # columns
+    names(index) <- c("hospital", "heart attack", "heart failure", "pneumonia")
+    if (!(outcome %in% names(index))) {
         stop(sprintf("'%s' not a valid outcome", outcome))
     }
 
     ## Return hospital name in that state with lowest 30-day death
     ## rate
-    state_df <- df[df$State == state, ]
-    state_df[which.min(state_df[[lookup[[outcome]]]]), "Hospital.Name"]
+    outc <- index[[outcome]]
+    hosp <- index[["hospital"]]
+    sdf <- df[df$State == state, c(outc, hosp)]
+    suppressWarnings(sdf[, 1] <- as.numeric(sdf[, 1]))
+    sdf <- sdf[complete.cases(sdf), ]
+
+    sdf[which.min(sdf[[outc]]), hosp]
 }
