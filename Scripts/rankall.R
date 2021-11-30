@@ -26,9 +26,13 @@ rankall <- function(outcome, num = "best") {
     ## For each state, find the hospital of the given rank
     outc <- index[[outcome]]
     hosp <- index[["hospital"]]
+
+    # Reduce df to 3 columns, recast outcome as numeric, drop NAs
     df <- df[, c(outc, hosp, "State")]
     suppressWarnings(df[, 1] <- as.numeric(df[, 1]))
     df <- df[complete.cases(df), ]
+
+    # Loop over unique state names, store rows in outdfs
     states <- unique(df$State)
     outdfs <- vector(mode = "list", length = length(states))
     outcols <- c(hosp, "State")
